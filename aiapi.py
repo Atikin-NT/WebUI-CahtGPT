@@ -23,3 +23,4 @@ def generateChatResponse(prompt):
         answer = "Oops you beat the AI, try different questions, if the problem persists, come back later."
 
     return answer
+    return "kuku"

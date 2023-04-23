@@ -81,12 +81,15 @@ def chat():
 
         res = {'answer': aiapi.generateChatResponse(prompt)}
         return jsonify(res), 200
-    return render_template('index.html', **locals())
+    context = {}
+    context['username'] = session["name"]
+    return render_template('chat.html', context=context)
 
 
 @app.route("/")
 def index():
-    return "Hello World <a href='/login'><button>Login</button></a>"
+    return render_template('sing_in.html')
+    # return "Hello World <a href='/login'><button>Login</button></a>"
 
 
 if __name__ == '__main__':

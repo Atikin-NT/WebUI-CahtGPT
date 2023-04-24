@@ -6,6 +6,7 @@ import json
 import pathlib
 import requests
 from flask import Flask, session, abort, redirect
+import psycopg2
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
@@ -27,13 +28,19 @@ flow = Flow.from_client_secrets_file(
     redirect_uri="http://127.0.0.1:5000/callback"
 )
 
+def get_db_connection():
+    conn = psycopg2.connect(host='localhost',
+                            database='chat_db',
+                            user=os.environ['DB_USERNAME'],
+                            password=os.environ['DB_PASSWORD'])
+    return conn
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
             return "error", 501
         else:
-            return function()
+            return function(*args, **kwargs)
     return wrapper
 
 
@@ -73,7 +80,7 @@ def logout():
     return redirect("/")
 
 
-@app.route("/chat", methods=['POST', 'GET'])
+@app.route("/chat", methods=['POST', 'GET'], endpoint='chat')
 @login_is_required
 def chat():
     if request.method == 'POST':
@@ -85,6 +92,69 @@ def chat():
     context['username'] = session["name"]
     return render_template('chat.html', context=context)
 
+@app.route("/conversations", methods=['GET'], endpoint='conversations')
+@login_is_required
+def conversations():
+    offset, limit = request.args.get('offset'), request.args.get('limit')
+
+    if (limit is None or offset is None):
+        abort(400)
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT c.cId, c.title FROM USERS u '
+                'inner join CONVERSATION c on u.uId = c.author '
+                'WHERE u.uId = %s '
+                'limit %s offset %s;', 
+                (1, limit, offset))
+    convs = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    # books = [
+    #     [1,'About C/C++'],
+    #     [2, 'Pascal--'],
+    #     [3, 'What is a Yopta Script?'],
+    # ]
+
+    res = {
+        'items': [{ 'id': conv[0], 'title': conv[1] } for conv in convs],
+        'offset': offset,
+        'limit': limit,
+        'total': len(convs)
+    }
+    return res
+
+@app.route("/conversation/<int:conv_id>", methods=['GET'], endpoint='conversation')
+@login_is_required
+def conversation(conv_id):
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT m.role, m.content FROM USERS u '
+                'inner join CONVERSATION c on u.uId = c.author '
+                'inner join MESSAGE m on m.conversation = c.cId '
+                'WHERE u.uId = %s AND c.cId = %s '
+                'ORDER BY m.create_t;', 
+                (1, conv_id))
+    msgs = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    # msgs = [
+    #     ["system", "You are a helpful assistant."],
+    #     ["user", "You are a helpful assistant."],
+    # ]
+
+    title = 'C++' # from front-end
+    messages = [{ 'role': msg[0], 'content': msg[1] } for msg in msgs]
+
+    res = {
+        'title': title,
+        'messages': messages
+    }
+
+    return res
 
 @app.route("/")
 def index():

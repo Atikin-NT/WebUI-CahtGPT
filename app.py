@@ -113,7 +113,7 @@ def conversations():
     # ]
 
     res = {
-        'items': [{ 'id': conv[0], 'title': conv[1] } for conv in convs],
+        'items': [{ 'id': conv[0] } for conv in convs],
         'offset': offset,
         'limit': limit,
         'total': len(convs)

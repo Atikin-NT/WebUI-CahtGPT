@@ -11,6 +11,7 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
+import db_functions
 
 
 app = Flask("Chat GPT")
@@ -80,36 +81,30 @@ def logout():
     return redirect("/")
 
 
-@app.route("/chat", methods=['POST', 'GET'], endpoint='chat')
+@app.route("/chat", methods=['POST', 'GET'], endpoint='chat') #/chat/123 такого нет
 @login_is_required
 def chat():
+    uId = 1
     if request.method == 'POST':
         prompt = request.form['prompt']
-
-        res = {'answer': aiapi.generateChatResponse(prompt)}
+        conv_id = int(request.form['conv_id']) if request.form['conv_id'] else db_functions.add_conversation(uId)
+        print(conv_id)
+        res = {'answer': aiapi.generateChatResponse(uId, conv_id, prompt)}
         return jsonify(res), 200
     context = {}
     context['username'] = session["name"]
     return render_template('chat.html', context=context)
 
-@app.route("/conversations", methods=['GET'], endpoint='conversations')
+@app.route("/backend-api/conversations", methods=['GET'], endpoint='conversations')
 @login_is_required
 def conversations():
+    uId = 1
     offset, limit = request.args.get('offset'), request.args.get('limit')
 
     if (limit is None or offset is None):
         abort(400)
 
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT c.cId, c.title FROM USERS u '
-                'inner join CONVERSATION c on u.uId = c.author '
-                'WHERE u.uId = %s '
-                'limit %s offset %s;', 
-                (1, limit, offset))
-    convs = cur.fetchall()
-    cur.close()
-    conn.close()
+    convs = db_functions.conversations(uId, limit, offset)
 
     # books = [
     #     [1,'About C/C++'],
@@ -125,21 +120,11 @@ def conversations():
     }
     return res
 
-@app.route("/conversation/<int:conv_id>", methods=['GET'], endpoint='conversation')
+@app.route("/backend-api/conversation/<int:conv_id>", methods=['GET'], endpoint='conversation')
 @login_is_required
 def conversation(conv_id):
 
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT m.role, m.content FROM USERS u '
-                'inner join CONVERSATION c on u.uId = c.author '
-                'inner join MESSAGE m on m.conversation = c.cId '
-                'WHERE u.uId = %s AND c.cId = %s '
-                'ORDER BY m.create_t;', 
-                (1, conv_id))
-    msgs = cur.fetchall()
-    cur.close()
-    conn.close()
+    msgs = db_functions.get_messages(conv_id)
 
     # msgs = [
     #     ["system", "You are a helpful assistant."],

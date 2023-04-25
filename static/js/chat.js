@@ -20,7 +20,7 @@ $("#list-group").append(html_data);
 $.ajax({
     type: "POST",
     url: "/chat",
-    data: {'prompt': question},
+    data: {'prompt': question, 'conv_id': null},
     success: function (data) {
         let gpt_data = '';
         gpt_data += `

@@ -96,11 +96,11 @@ def generateChatResponse(uId, cId, prompt):
 
     # may be it should be a transaction
     db_functions.add_message(question['role'], question['content'], cId)
-    db_functions.add_message(answer_msg['role'], answer_msg['content'], cId)
+    db_functions.add_message(answer_msg['role'], answer_msg['content'].strip(), cId)
     db_functions.upd_tokens_left(uId, tokens_left - total_tokens_usage)
 
     try:
-        answer = answer_msg['content'].replace('\n', '<br>')
+        answer = answer_msg['content'].strip()
     except:
         answer = "Oops you beat the AI, try different questions, if the problem persists, come back later."
 

@@ -10,6 +10,7 @@ db.execute_query('DROP TABLE IF EXISTS USERS CASCADE;')
 db.execute_query('CREATE TABLE USERS ('
                                 'uId SERIAL PRIMARY KEY,'
                                 'name TEXT NOT NULL,'
+                                'sub varchar(64) UNIQUE NOT NULL,'
                                 'total_spent INTEGER DEFAULT 0,'
                                 'tokens_left INTEGER DEFAULT 0,'
                                 'lvl INTEGER NOT NULL DEFAULT 1,'
@@ -71,9 +72,9 @@ db.execute_query('INSERT INTO PRIVILEGES (tokens_quota) VALUES (%s);', (5000, ))
 db.execute_query('INSERT INTO PRIVILEGES (tokens_quota) VALUES (%s);', (10000, ))
 db.execute_query('INSERT INTO PRIVILEGES (tokens_quota) VALUES (%s);', (20000, ))
 
-db.execute_query('INSERT INTO USERS (name) VALUES (%s);', ('Clark', ))
-db.execute_query('INSERT INTO USERS (name) VALUES (%s);', ('Dave', ))
-db.execute_query('INSERT INTO USERS (name) VALUES (%s);', ('Ava', ))
+db.execute_query('INSERT INTO USERS (name, sub) VALUES (%s, %s);', ('Clark', '123'))
+db.execute_query('INSERT INTO USERS (name, sub) VALUES (%s, %s);', ('Dave', '321'))
+db.execute_query('INSERT INTO USERS (name, sub) VALUES (%s, %s);', ('Ava', '42'))
 
 
 db.execute_query('INSERT INTO CONVERSATION (author) VALUES (%s);', (1, ))

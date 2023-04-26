@@ -29,17 +29,11 @@ flow = Flow.from_client_secrets_file(
     redirect_uri="http://127.0.0.1:5000/callback"
 )
 
-def get_db_connection():
-    conn = psycopg2.connect(host='localhost',
-                            database='chat_db',
-                            user=os.environ['DB_USERNAME'],
-                            password=os.environ['DB_PASSWORD'])
-    return conn
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
-        if "google_id" not in session:
-            return "error", 501
+        if "uId" not in session:
+            return redirect("/login")
         else:
             return function(*args, **kwargs)
     return wrapper
@@ -57,7 +51,7 @@ def callback():
     flow.fetch_token(authorization_response=request.url)
 
     if not session["state"] == request.args["state"]:
-        abort(500)
+        return redirect("/login")
 
     credentials = flow.credentials
     request_session = requests.session()
@@ -70,9 +64,19 @@ def callback():
         audience=GOOGLE_CLIENT_ID
     )
 
-    session["google_id"] = id_info.get("sub")
-    session["name"] = id_info.get("name")
-    return redirect("/chat")
+    sub = id_info.get("sub")
+    name = id_info.get("name")
+    picture = id_info.get("picture")
+
+    user = db_functions.get_uid_by_sub(sub)
+    if not user:
+        uId = db_functions.add_user(sub, name)
+    else:
+        uId = user[0][0]
+    session["uId"] = uId
+    session["name"] = name
+    session["picture"] = picture
+    return redirect('/chat')
 
 
 @app.route("/logout")
@@ -84,7 +88,7 @@ def logout():
 @app.route("/chat", methods=['POST', 'GET'], endpoint='chat') #/chat/123 такого нет
 @login_is_required
 def chat():
-    uId = 1
+    uId = session['uId']
     if request.method == 'POST':
         prompt = request.form['prompt']
         conv_id = int(request.form['conv_id']) if request.form['conv_id'] else db_functions.add_conversation(uId)
@@ -93,16 +97,15 @@ def chat():
         return jsonify(res), 200
     context = {}
     context['username'] = session["name"]
+    context['picture'] = session["picture"]
     return render_template('chat.html', context=context)
 
 @app.route("/backend-api/conversations", methods=['GET'], endpoint='conversations')
 @login_is_required
 def conversations():
-    uId = 1
-    offset, limit = request.args.get('offset'), request.args.get('limit')
+    uId = session['uId']
+    offset, limit = request.args.get('offset', 0), request.args.get('limit', 20)
 
-    if (limit is None or offset is None):
-        abort(400)
 
     convs = db_functions.conversations(uId, limit, offset)
 
@@ -123,7 +126,7 @@ def conversations():
 @app.route("/backend-api/conversation/<int:conv_id>", methods=['GET'], endpoint='conversation')
 @login_is_required
 def conversation(conv_id):
-
+    uId = session['uId'] # does he actually have access?
     msgs = db_functions.get_messages(conv_id)
 
     # msgs = [

@@ -33,3 +33,9 @@ def upd_tokens_left(user, tokens_left):
 
 def get_author(conversation):
     return db.fetch_data('SELECT author FROM CONVERSATION c where c.cId = %s;', (conversation, ))[0][0]
+
+def get_uid_by_sub(sub):
+    return db.fetch_data('SELECT uId FROM USERS u where u.sub = %s;', (sub, ))
+
+def add_user(sub, name):
+    return db.execute_query_ret('INSERT INTO USERS (sub, name) VALUES (%s, %s) RETURNING uId;', (sub, name))

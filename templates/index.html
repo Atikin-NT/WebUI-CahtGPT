@@ -3,10 +3,18 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <meta name="description" content="Веб интерфес для chat GPT">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/static/favicon.png">
+    <meta name="theme-color" content="#ffffff">
+
+
     <title>Chat-GPT</title>
+    <link rel="manifest" href="/static/manifest.json">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/chat.css') }}">
     
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='images/gpt.png') }}">

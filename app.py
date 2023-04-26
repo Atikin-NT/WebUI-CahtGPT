@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_file
 import config
 import aiapi
 import json
@@ -38,6 +38,9 @@ def login_is_required(function):
             return function(*args, **kwargs)
     return wrapper
 
+@app.route('/sw.js')
+def sw():
+    return send_file('static/sw.js', mimetype='text/javascript')
 
 @app.route("/login")
 def login():

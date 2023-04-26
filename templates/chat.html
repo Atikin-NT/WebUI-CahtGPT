@@ -31,6 +31,16 @@
         </form>
     </div>
 
-
+    <script type="text/javascript">
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register("/sw.js", { scope: '/' }).then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+        }
+    </script>
     <script language="JavaScript" type="text/javascript" src="{{ url_for('static', filename='js/chat.js') }}"></script>
 {% endblock %}

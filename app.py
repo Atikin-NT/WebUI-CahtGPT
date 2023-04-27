@@ -33,14 +33,11 @@ flow = Flow.from_client_secrets_file(
 def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "uId" not in session:
-            return redirect("/login")
+            return redirect("/")
         else:
             return function(*args, **kwargs)
     return wrapper
 
-@app.route('/sw.js')
-def sw():
-    return send_file('static/sw.js', mimetype='text/javascript')
 
 @app.route("/login")
 def login():
@@ -54,7 +51,7 @@ def callback():
     flow.fetch_token(authorization_response=request.url)
 
     if not session["state"] == request.args["state"]:
-        return redirect("/login")
+        return redirect("/")
 
     credentials = flow.credentials
     request_session = requests.session()
@@ -64,7 +61,8 @@ def callback():
     id_info = id_token.verify_oauth2_token(
         id_token=credentials._id_token,
         request=token_request,
-        audience=GOOGLE_CLIENT_ID
+        audience=GOOGLE_CLIENT_ID, 
+        clock_skew_in_seconds=2
     )
 
     sub = id_info.get("sub")

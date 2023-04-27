@@ -2,8 +2,11 @@ const CACHE_NAME = 'chat-app-cache-v1';
 const urlsToCache = [
   '/',
   '/static/css/chat.css',
-  '/static/js/chat.js',
-  '/static/js/history.js'
+  '/static/images/favicon.png',
+  '/static/images/gpt.png',
+  '/static/images/user.png'
+  // '/static/js/chat.js',
+  // '/static/js/history.js'
 ];
 
 self.addEventListener('install', event => {
@@ -14,6 +17,7 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (event.request.url.startsWith('http')) {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
@@ -35,8 +39,9 @@ self.addEventListener('fetch', event => {
           });
       })
   );
+  }
 });
 
-const response = new Response('Hello World!', {
-    headers: {'Content-Type': 'text/javascript'}
-  });
+// const response = new Response('Hello World!', {
+//     headers: {'Content-Type': 'text/javascript'}
+//   });

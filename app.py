@@ -112,8 +112,7 @@ def chat():
             if total_tokens_usage == 0:
                 return jsonify({'answer': err}), 400
             
-            conv_id = db_functions.add_conversation(uId)
-            db_functions.upd_title(conv_id, question['content'])
+            conv_id = db_functions.add_conversation(uId, question['content'])
 
         db_functions.add_message(question['role'], question['content'], conv_id)
         db_functions.upd_tokens_left(uId, tokens_left - total_tokens_usage)

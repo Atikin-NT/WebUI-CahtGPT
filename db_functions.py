@@ -17,8 +17,8 @@ def conversations(uId, limit, offset):
 def add_message(role, content, conversation):
     db.execute_query('INSERT INTO MESSAGE (role, content, conversation) VALUES (%s, %s, %s);', (role, content, conversation))
 
-def add_conversation(author):
-    return db.execute_query_ret('INSERT INTO CONVERSATION (author) VALUES (%s) RETURNING cId;', (author, ))
+def add_conversation(author, title):
+    return db.execute_query_ret('INSERT INTO CONVERSATION (author, title) VALUES (%s, %s) RETURNING cId;', (author, title))
 
 def upd_title(cId, title):
     db.execute_query('UPDATE CONVERSATION SET title = %s WHERE cId = %s;', (title, cId))

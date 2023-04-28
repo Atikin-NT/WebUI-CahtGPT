@@ -1,4 +1,5 @@
 const getpopup = (id, title) => {
+    $(".toggle-history").click();
     $.ajax({
         type: "GET",
         url: `/backend-api/conversation/${id}`,
@@ -36,7 +37,7 @@ const getpopup = (id, title) => {
                 title = data.items[i].title;
                 html_data += `
                 <a href="#" onclick="getpopup(${data.items[i].id}, '${encodeURIComponent(title)}')" class="flex py-3 px-3 items-center gap-3 relative rounded-md cursor-pointer break-all pr-14 bg-gray-800 hover:bg-gray-800 group animate-flash">
-                <div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">${data.items[i].title}</div>
+                <div class="flex-grow-1 ms-3"><p>${data.items[i].title}</p></div>
                 </a>
                 `;
             }

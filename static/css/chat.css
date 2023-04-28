@@ -714,17 +714,22 @@ button:focus {
         margin-right: 5px;
     }
     .history {
-        /* width: 100%; */
-        display: none;
+        z-index: 2;
+        position: fixed;
+        left: -90%;
+        width: 90%;
+        background-color: #ffffff;
+        transition: left 0.3s ease;
+
+        outline: 0;
+        overflow: hidden;
+        float: left;
+        padding: 15px;
     }
     .chatbox {
-        width: 100%;
-        /* position: absolute;
-        left: 1000px;
-        right: 0;
-        background: #fff;
-        transition: all 0.5s ease;
-        border-left: none; */
+        margin-left: 0;
+        flex-grow: 1;
+        padding: 20px;
     }
     .showbox {
         left: 0 !important;
@@ -732,7 +737,8 @@ button:focus {
         transition: all 0.5s ease;
     }
     .history.show-history {
-        display: block;
+        z-index: 2;
+        left: 0;
       }
     .toggle-history {
         display: block;
@@ -773,3 +779,15 @@ button:focus {
         border-bottom-left-radius: 6px;
     }
 }
+
+@media only screen and (min-width: 568px) {
+    .sidebar {
+      position: static;
+      width: 90%;
+      margin-right: 20px;
+    }
+  
+    .chat-window {
+      margin-left: 20px;
+    }
+  }

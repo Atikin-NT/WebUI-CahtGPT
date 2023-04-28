@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, jsonify, request, send_file
+from flask import Flask, render_template, jsonify, request, make_response, send_from_directory
 import config
 import aiapi
 import json
@@ -38,6 +38,13 @@ def login_is_required(function):
             return function(*args, **kwargs)
     return wrapper
 
+@app.route('/sw.js')
+def sw():
+    response=make_response(
+                     send_from_directory('./static', 'sw.js'))
+    #change the content header file. Can also omit; flask will handle correctly.
+    response.headers['Content-Type'] = 'application/javascript'
+    return response
 
 @app.route("/login")
 def login():

@@ -1,5 +1,13 @@
 const CACHE_NAME = 'chat-app-cache-v1';
-const urlsToCache = [];
+const urlsToCache = [
+  '/',
+  '/static/css/chat.css',
+  '/static/images/favicon.png',
+  '/static/images/gpt.png',
+  '/static/js/chat.js',
+  '/static/js/history.js',
+  '/static/manifest.json'
+];
 
 self.addEventListener('install', event => {
   event.waitUntil(

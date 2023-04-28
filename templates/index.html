@@ -28,6 +28,7 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">WebUI Chat GPT</a>
+        <button class="toggle-history" type="button" >Switch View</button>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -53,7 +54,7 @@
       <div class="row">
         <div class="col-12">
           <div class="chat-area">
-            <div class="chatlist">
+            <div class="history">
               <div class="modal-dialog-scrollable">
                 <div class="modal-content">
                   {% block history %}{% endblock %}

@@ -213,11 +213,11 @@ message-area
     min-height: calc(100% - 1rem);
 }
 
-.chatlist {
+.history {
     outline: 0;
     height: 100%;
     overflow: hidden;
-    width: 300px;
+    width: auto;
     float: left;
     padding: 15px;
 }
@@ -241,7 +241,7 @@ message-area
 }
 
 .chatbox .modal-dialog,
-.chatlist .modal-dialog {
+.history .modal-dialog {
     max-width: 100%;
     margin: 0;
 }
@@ -704,28 +704,38 @@ button:focus {
     display: none;
 }
 
+.toggle-history {
+    display: none;
+}
 
-
-@media (max-width: 767px) {
+@media (max-width: 567px) {
     .chat-icon {
         display: block;
         margin-right: 5px;
     }
-    .chatlist {
-        width: 100%;
+    .history {
+        /* width: 100%; */
+        display: none;
     }
     .chatbox {
         width: 100%;
-        position: absolute;
+        /* position: absolute;
         left: 1000px;
         right: 0;
         background: #fff;
         transition: all 0.5s ease;
-        border-left: none;
+        border-left: none; */
     }
     .showbox {
         left: 0 !important;
+        width: 100%;
         transition: all 0.5s ease;
+    }
+    .history.show-history {
+        display: block;
+      }
+    .toggle-history {
+        display: block;
     }
     .msg-head h3 {
         font-size: 14px;

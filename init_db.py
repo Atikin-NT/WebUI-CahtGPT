@@ -18,10 +18,11 @@ db.execute_query('CREATE TABLE USERS ('
                                 )
 
 db.execute_query('DROP TABLE IF EXISTS CONVERSATION CASCADE;')
-db.execute_query('CREATE TABLE CONVERSATION ('
-                                    'cId SERIAL PRIMARY KEY,'
-                                    'author INTEGER NOT NULL,'
-                                    'FOREIGN KEY (author) REFERENCES USERS(uId) on delete cascade);'
+db.execute_query('''CREATE TABLE CONVERSATION (
+                                    cId SERIAL PRIMARY KEY,
+                                    author INTEGER NOT NULL,
+                                    title text DEFAULT '',
+                                    FOREIGN KEY (author) REFERENCES USERS(uId) on delete cascade);'''
                                     )
 
 db.execute_query('DROP TABLE IF EXISTS MESSAGE;')

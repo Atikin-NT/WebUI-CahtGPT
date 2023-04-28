@@ -30,12 +30,11 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
   See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.""")
 
 
-def generateChatResponse(uId, cId, prompt):
+def generateChatResponse(prompt, ctx_messages, tokens_left):
     model = "gpt-3.5-turbo"
 
     messages = [{"role": "user", "content": "You are a helpful assistant."}]
 
-    ctx_messages = db_functions.get_messages(cId)
     ctx_messages = [{ 'role': msg[0], 'content': msg[1] } for msg in ctx_messages]
     messages.extend(ctx_messages)
 
@@ -43,18 +42,15 @@ def generateChatResponse(uId, cId, prompt):
     messages.append(question)
 
     msg_len = num_tokens_from_messages(messages)
-    tokens_left = db_functions.tokens_left(uId)
-    quota = db_functions.get_quota(uId)
 
     print(messages)
     print('question_len', msg_len)
     print('tokens_left', tokens_left)
-    print('quota', quota)
     
 
 
     if msg_len > MAX_TOKENS_REQ or msg_len > tokens_left:
-        return "Prompt too long"
+        return (question, "", 0, "Promt too long")
 
     # response = openai.ChatCompletion.create(
     #     model=model,
@@ -84,9 +80,12 @@ def generateChatResponse(uId, cId, prompt):
 
     usage = response['usage']
     total_tokens_usage = usage['total_tokens']
-    answer_msg = response['choices'][0]['message'] # choices may be empty??
+    if len(response['choices']) == 0:
+        return (question, "", total_tokens_usage, "Oops you beat the AI, try different questions, if the problem persists, come back later.")
+    
+    answer_msg = response['choices'][0]['message']
 
-    total_tokens_usage = msg_len + MAX_TOKENS_RESP # while response not valid
+    total_tokens_usage = msg_len + usage["completion_tokens"]
 
     print('actual question_len', usage['prompt_tokens'])
     print('usage', total_tokens_usage)
@@ -94,15 +93,6 @@ def generateChatResponse(uId, cId, prompt):
     print(question)
     print(answer_msg)
 
-    # may be it should be a transaction
-    db_functions.add_message(question['role'], question['content'], cId)
-    db_functions.add_message(answer_msg['role'], answer_msg['content'].strip(), cId)
-    db_functions.upd_tokens_left(uId, tokens_left - total_tokens_usage)
+    return (question, answer_msg, total_tokens_usage, "ok")
 
-    try:
-        answer = answer_msg['content'].strip()
-    except:
-        answer = "Oops you beat the AI, try different questions, if the problem persists, come back later."
 
-    return answer
-    return "kuku"

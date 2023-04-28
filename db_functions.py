@@ -9,9 +9,8 @@ def get_messages(cId):
                         (cId, ))
 
 def conversations(uId, limit, offset):
-    return db.fetch_data('SELECT c.cId FROM USERS u '
-                        'inner join CONVERSATION c on u.uId = c.author '
-                        'WHERE u.uId = %s '
+    return db.fetch_data('SELECT cId, title from CONVERSATION c '
+                        'WHERE c.author = %s '
                         'limit %s offset %s;', 
                         (uId, limit, offset))
 
@@ -20,6 +19,9 @@ def add_message(role, content, conversation):
 
 def add_conversation(author):
     return db.execute_query_ret('INSERT INTO CONVERSATION (author) VALUES (%s) RETURNING cId;', (author, ))
+
+def upd_title(cId, title):
+    db.execute_query('UPDATE CONVERSATION SET title = %s WHERE cId = %s;', (title, cId))
 
 def get_quota(user):
     return db.fetch_data('SELECT tokens_quota from user_quota WHERE uId = %s;', (user, ))[0][0]

@@ -92,10 +92,39 @@ def chat():
     uId = session['uId']
     if request.method == 'POST':
         prompt = request.form['prompt']
-        conv_id = int(request.form['conv_id']) if request.form['conv_id'] else db_functions.add_conversation(uId)
-        print(conv_id)
-        res = {'answer': aiapi.generateChatResponse(uId, conv_id, prompt)}
-        return jsonify(res), 200
+        if request.form['conv_id']:
+            conv_id = int(request.form['conv_id'])
+            author = db_functions.get_author(conv_id)
+            if author != uId:
+                return jsonify({'answer': 'permission denied'}), 403
+            ctx_messages = db_functions.get_messages(conv_id)
+
+            tokens_left = db_functions.tokens_left(uId)
+            question, answer, total_tokens_usage, err = aiapi.generateChatResponse(prompt, ctx_messages, tokens_left)
+            if total_tokens_usage == 0:
+                return jsonify({'answer': err}), 400
+
+        else:
+            ctx_messages = []
+            
+            tokens_left = db_functions.tokens_left(uId)
+            question, answer, total_tokens_usage, err = aiapi.generateChatResponse(prompt, ctx_messages, tokens_left)
+            if total_tokens_usage == 0:
+                return jsonify({'answer': err}), 400
+            
+            conv_id = db_functions.add_conversation(uId)
+            db_functions.upd_title(conv_id, question['content'])
+
+        db_functions.add_message(question['role'], question['content'], conv_id)
+        db_functions.upd_tokens_left(uId, tokens_left - total_tokens_usage)
+        
+        if not answer:
+            return jsonify({'answer': err}), 200
+        db_functions.add_message(answer['role'], answer['content'].strip(), conv_id)
+
+
+        return jsonify({'answer': answer['content'].strip()}), 200
+    
     context = {}
     context['username'] = session["name"]
     context['picture'] = session["picture"]
@@ -117,7 +146,7 @@ def conversations():
     # ]
 
     res = {
-        'items': [{ 'id': conv[0] } for conv in convs],
+        'items': [{ 'id': conv[0], 'title': conv[1] } for conv in convs],
         'offset': offset,
         'limit': limit,
         'total': len(convs)
@@ -135,11 +164,9 @@ def conversation(conv_id):
     #     ["user", "You are a helpful assistant."],
     # ]
 
-    title = 'C++' # from front-end
     messages = [{ 'role': msg[0], 'content': msg[1] } for msg in msgs]
 
     res = {
-        'title': title,
         'messages': messages
     }
 

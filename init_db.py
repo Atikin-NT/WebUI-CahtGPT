@@ -1,59 +1,90 @@
-import os
-import psycopg2
+from database import db
 
-conn = psycopg2.connect(
-        host="localhost",
-        database="chat_db",
-        user=os.environ['DB_USERNAME'],
-        password=os.environ['DB_PASSWORD'])
-
-
-cur = conn.cursor()
-
-cur.execute('DROP TABLE IF EXISTS USERS CASCADE;')
-cur.execute('CREATE TABLE USERS ('
-                                'uId SERIAL PRIMARY KEY,'
-                                'name TEXT NOT NULL,'
-                                'dept TEXT NOT NULL,'
-                                'tokens_spent INTEGER DEFAULT 0,'
-                                'tokens_left INTEGER DEFAULT 0,'
-                                'tokens_quota INTEGER DEFAULT 0);'
+db.execute_query('DROP TABLE IF EXISTS PRIVILEGES CASCADE;')
+db.execute_query('CREATE TABLE PRIVILEGES ('
+                                'level SERIAL PRIMARY KEY,'
+                                'tokens_quota INTEGER NOT NULL);'
                                 )
 
-cur.execute('DROP TABLE IF EXISTS CONVERSATION;')
-cur.execute('CREATE TABLE CONVERSATION ('
-                                    'cId SERIAL PRIMARY KEY,'
-                                    'title TEXT,'
-                                    'author INTEGER NOT NULL,'
-                                    'FOREIGN KEY (author) REFERENCES USERS(uId));'
+db.execute_query('DROP TABLE IF EXISTS USERS CASCADE;')
+db.execute_query('CREATE TABLE USERS ('
+                                'uId SERIAL PRIMARY KEY,'
+                                'name TEXT NOT NULL,'
+                                'sub varchar(64) UNIQUE NOT NULL,'
+                                'total_spent INTEGER DEFAULT 0,'
+                                'tokens_left INTEGER DEFAULT 0,'
+                                'lvl INTEGER NOT NULL DEFAULT 1,'
+                                'FOREIGN KEY (lvl) REFERENCES PRIVILEGES(level));'
+                                )
+
+db.execute_query('DROP TABLE IF EXISTS CONVERSATION CASCADE;')
+db.execute_query('''CREATE TABLE CONVERSATION (
+                                    cId SERIAL PRIMARY KEY,
+                                    author INTEGER NOT NULL,
+                                    title text DEFAULT '',
+                                    FOREIGN KEY (author) REFERENCES USERS(uId) on delete cascade);'''
                                     )
 
-cur.execute('DROP TABLE IF EXISTS MESSAGE;')
-cur.execute('CREATE TABLE MESSAGE ('
-                                'mId varchar(255) NOT NULL,'
+db.execute_query('DROP TABLE IF EXISTS MESSAGE;')
+db.execute_query('CREATE TABLE MESSAGE ('
+                                'mId SERIAL PRIMARY KEY,'
                                 'role text NOT NULL,'
                                 'content text NOT NULL,'
                                 'create_t timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,'
                                 'conversation INTEGER NOT NULL,'
-                                'CONSTRAINT PK_Message PRIMARY KEY (mId, conversation));'
-                                    )
+                                'FOREIGN KEY (conversation) REFERENCES CONVERSATION(cId) on delete cascade);'
+                                )
 
-cur.execute('INSERT INTO USERS (name, dept) VALUES (%s, %s);', ('Clark', 'Sales'))
-cur.execute('INSERT INTO USERS (name, dept) VALUES (%s, %s);', ('Dave', 'Accounting'))
-cur.execute('INSERT INTO USERS (name, dept) VALUES (%s, %s);', ('Ava', 'Sales'))
-
-cur.execute('INSERT INTO CONVERSATION (title, author) VALUES (%s, %s);', ("C++", 1))
-cur.execute('INSERT INTO CONVERSATION (title, author) VALUES (%s, %s);', ("C", 1))
-cur.execute('INSERT INTO CONVERSATION (title, author) VALUES (%s, %s);', ("Rust", 2))
-
-cur.execute('INSERT INTO MESSAGE (mId, role, content, conversation) VALUES (%s, %s, %s, %s);', ('m1', "assist", "You are the best", 1))
-cur.execute('INSERT INTO MESSAGE (mId, role, content, conversation) VALUES (%s, %s, %s, %s);', ('m2', "user", "Are you ok?", 1))
-cur.execute('INSERT INTO MESSAGE (mId, role, content, conversation) VALUES (%s, %s, %s, %s);', ('m3', "system", "Yep", 1))
-cur.execute('INSERT INTO MESSAGE (mId, role, content, conversation) VALUES (%s, %s, %s, %s);', ('m2', "assist", "You are the best", 2))
-cur.execute('INSERT INTO MESSAGE (mId, role, content, conversation) VALUES (%s, %s, %s, %s);', ('m1', "assist", "You are the best", 3))
+db.execute_query('CREATE OR REPLACE VIEW user_quota AS '
+                 'SELECT uId, tokens_quota FROM USERS u '
+                 'left join PRIVILEGES p on u.lvl = p.level;'
+                 )
 
 
-conn.commit()
+db.execute_query('CREATE OR REPLACE FUNCTION set_default_value() RETURNS trigger AS '
+                 '$$ BEGIN '
+                 'NEW.tokens_left := (SELECT tokens_quota FROM PRIVILEGES WHERE level = NEW.lvl);'
+                 'RETURN NEW; '
+                 'END; $$ '
+                 'LANGUAGE plpgsql;'
+                 )
 
-cur.close()
-conn.close()
+db.execute_query('CREATE OR REPLACE TRIGGER trg_set_default_value '
+                 'BEFORE INSERT ON USERS '
+                 'FOR EACH ROW EXECUTE FUNCTION set_default_value();')
+
+
+db.execute_query('CREATE OR REPLACE FUNCTION update_total_token_used() RETURNS trigger AS '
+                 '$$ BEGIN '
+                 'IF NEW.tokens_left < OLD.tokens_left THEN '
+                 'UPDATE Users SET total_spent = total_spent + OLD.tokens_left - NEW.tokens_left WHERE uId = NEW.uId; '
+                 'END IF; RETURN NEW; '
+                 'END; $$ '
+                 'LANGUAGE plpgsql;'
+                 )
+
+db.execute_query('CREATE OR REPLACE TRIGGER trg_update_total_token_used '
+                 'AFTER UPDATE OF tokens_left ON USERS '
+                 'FOR EACH ROW EXECUTE FUNCTION update_total_token_used();')
+
+
+
+db.execute_query('INSERT INTO PRIVILEGES (tokens_quota) VALUES (%s);', (5000, ))
+db.execute_query('INSERT INTO PRIVILEGES (tokens_quota) VALUES (%s);', (10000, ))
+db.execute_query('INSERT INTO PRIVILEGES (tokens_quota) VALUES (%s);', (20000, ))
+
+db.execute_query('INSERT INTO USERS (name, sub) VALUES (%s, %s);', ('Clark', '123'))
+db.execute_query('INSERT INTO USERS (name, sub) VALUES (%s, %s);', ('Dave', '321'))
+db.execute_query('INSERT INTO USERS (name, sub) VALUES (%s, %s);', ('Ava', '42'))
+
+
+db.execute_query('INSERT INTO CONVERSATION (author) VALUES (%s);', (1, ))
+db.execute_query('INSERT INTO MESSAGE (role, content, conversation) VALUES (%s, %s, %s);', ("assist", "You are the best", 1))
+db.execute_query('INSERT INTO MESSAGE (role, content, conversation) VALUES (%s, %s, %s);', ("user", "Are you ok?", 1))
+db.execute_query('INSERT INTO MESSAGE (role, content, conversation) VALUES (%s, %s, %s);', ("system", "Yep", 1))
+
+db.execute_query('INSERT INTO CONVERSATION (author) VALUES (%s);', (1, ))
+db.execute_query('INSERT INTO MESSAGE (role, content, conversation) VALUES (%s, %s, %s);', ("assist", "You are the best", 2))
+
+db.execute_query('INSERT INTO CONVERSATION (author) VALUES (%s);', (2, ))
+db.execute_query('INSERT INTO MESSAGE (role, content, conversation) VALUES (%s, %s, %s);', ("assist", "You are the best", 3))

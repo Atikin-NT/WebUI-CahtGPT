@@ -53,6 +53,18 @@ def login():
     return redirect(authorization_url)
 
 
+@app.route("/callback_tg")
+def callback_tg():
+    uId = request.args.get("id")
+    name = request.args.get("username")
+    picture = request.args.get("photo_url")
+    session["uId"] = uId
+    session["name"] = name
+    session["picture"] = picture
+
+    return redirect('/chat')
+
+
 @app.route("/callback")
 def callback():
     flow.fetch_token(authorization_response=request.url)
@@ -185,4 +197,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000', debug=True)
+    app.run(host='0.0.0.0', port='80', debug=True)

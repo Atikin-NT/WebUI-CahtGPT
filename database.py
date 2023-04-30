@@ -1,5 +1,6 @@
 import os
 import psycopg2
+import pprint
 
 class PostgresClient:
     def __init__(self, dbname, user, password, host, port):
@@ -65,11 +66,12 @@ class PostgresClient:
         self.disconnect()
 
 
+# pprint.pprint(dict(os.environ), width = 1)
 
 # Создание экземпляра класса PostgresClient
 db = PostgresClient(
     dbname='chat_db', 
-    user=os.environ['DB_USERNAME'], 
-    password=os.environ['DB_PASSWORD'], 
+    user="postgres", 
+    password="postgres", 
     host='localhost', 
     port='5432')

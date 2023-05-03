@@ -1,0 +1,35 @@
+{% extends 'index.html' %}
+
+{% block history %}
+    <div class="chat-header">
+        <div class="msg-search">
+            <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Search" aria-label="search">
+            <a class="add" href="/chat"><img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/add.svg" alt="add"></a>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <div class="chat-list" id="history-list-group">
+            <a href="#" class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                    <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png" alt="user img">
+                    <span class="active"></span>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h3>Mehedi Hasan</h3>
+                    <p>front end developer</p>
+                </div>
+            </a>
+            <a href="#" class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                    <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png" alt="user img">
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h3>Ryhan</h3>
+                    <p>front end developer</p>
+                </div>
+            </a>
+        </div>
+    </div>
+    <script language="JavaScript" type="text/javascript" src="{{ url_for('static', filename='js/history.js') }}"></script>
+{% endblock %}

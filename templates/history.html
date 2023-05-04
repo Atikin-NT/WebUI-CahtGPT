@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+
+{% block history %}
+
+
+    <div class="modal-body">
+        <ul class="chat-list" id="history-list-group">
+            <li><a href="/chat" class="flex py-3 px-3 items-center gap-3 relative rounded-md cursor-pointer break-all pr-14 bg-gray-800 hover:bg-gray-800 group animate-flash">
+                <div class="flex-grow-1 ms-3" style="display: flex; align-items: center;">
+                    <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/add.svg" alt="add" width="32" height="32">
+                    <p>New chat</p>
+                </div>
+            </a></li>
+        </ul>
+    </div>
+    <script language="JavaScript" type="text/javascript" src="{{ url_for('static', filename='js/history.js') }}"></script>
+{% endblock %}

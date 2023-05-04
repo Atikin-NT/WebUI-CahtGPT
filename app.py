@@ -37,8 +37,8 @@ def get_db_connection():
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
-        if "google_id" not in session:
-            return "error", 501
+        if "uId" not in session:
+            return redirect("/")
         else:
             return function(*args, **kwargs)
     return wrapper
@@ -83,13 +83,14 @@ def logout():
 @app.route("/chat", methods=['POST', 'GET'], endpoint='chat')
 @login_is_required
 def chat():
+    uId = session['uId']
     if request.method == 'POST':
         prompt = request.form['prompt']
-
         res = {'answer': aiapi.generateChatResponse(prompt)}
         return jsonify(res), 200
     context = {}
     context['username'] = session["name"]
+    context['picture'] = session["picture"]
     return render_template('chat.html', context=context)
 
 @app.route("/conversations", methods=['GET'], endpoint='conversations')

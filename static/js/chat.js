@@ -10,6 +10,7 @@ const create_message = (message, imageSrc) => {
     </a>
     `;
 }
+
 $.ajaxSetup({
     data: {
         conv_id: null
@@ -22,7 +23,6 @@ $("#gpt-button").click(function() {
 
     let html_data = create_message(question, "static/images/favicon.png");
     $("#list-group").append(html_data);
-
 
     $.ajax({
         type: "POST",

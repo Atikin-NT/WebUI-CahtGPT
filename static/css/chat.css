@@ -209,24 +209,20 @@ message-area
     min-height: calc(100% - 1rem);
 }
 
-.chat-area .modal-content {
+.history {
+    outline: 0;
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
+    width: auto;
+    float: left;
+    padding: 15px;
 }
 
-.modal-body {
-    flex: 1 1 auto;
-}
-
-.custom-msg{
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-}
-
-.each-msg{
-    margin-left: 10px;
+.chat-area .modal-content {
+    border: none;
+    border-radius: 0;
+    outline: 0;
+    height: 100%;
 }
 
 .chat-area .modal-dialog-scrollable {
@@ -234,8 +230,16 @@ message-area
 }
 
 .chatbox {
+    width: auto;
     overflow: hidden;
     height: 100%;
+    border-left: 1px solid #ccc;
+}
+
+.chatbox .modal-dialog,
+.history .modal-dialog {
+    max-width: 100%;
+    margin: 0;
 }
 
 .msg-search {
@@ -546,7 +550,6 @@ li.repaly .time {
 }
 
 /* send box ------------------------------------ */
-
 .send-box {
     padding: 15px;
     border-top: 1px solid #ccc;

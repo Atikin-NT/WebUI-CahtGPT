@@ -3,8 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <meta name="description" content="Веб интерфес для chat GPT">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/static/favicon.png">
+    <meta name="theme-color" content="#ffffff">
+
 
     <title>Chat-GPT</title>
     <link rel="manifest" href="/static/manifest.json">
@@ -113,13 +120,14 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">WebUI Chat GPT</a>
+        <button class="toggle-history" type="button" >Switch View</button>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <img class="rounded img-fluid mx-auto d-block" height="40" width="40" src="{{ url_for('static', filename='images/user.png') }}"/>
+              <img class="rounded img-fluid mx-auto d-block" height="40" width="40" src="{{ context.picture }}"/>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled mx-auto text-white-50">{{ context.username }}</a>
@@ -141,7 +149,6 @@
             <div class="history">
               <div class="modal-dialog-scrollable">
                 <div class="modal-content">
-                  
                 </div>
               </div>
             </div>
@@ -149,7 +156,6 @@
             <div class="chatbox">
               <div class="modal-dialog-scrollable">
                 <div class="modal-content">
-                  
                 </div>
               </div>
             </div>

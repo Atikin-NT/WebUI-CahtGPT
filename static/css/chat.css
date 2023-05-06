@@ -195,18 +195,30 @@ a {
 /* *******************************
 message-area
 ******************************** */
-
 .container{
     width: 100%;
     margin: 0;
     max-width: none;
+    display: flex;
+    flex: 1;
+}
+
+.row{
+    display: flex;
+    flex: 1;
+}
+
+.col-12{
+    display: flex;
+    flex: 1;
 }
 
 .chat-area {
     width: 100%;
-    height: 90vh;
     overflow: hidden;
     min-height: calc(100% - 1rem);
+    display: flex;
+    flex: 1;
 }
 
 .history {
@@ -223,10 +235,15 @@ message-area
     border-radius: 0;
     outline: 0;
     height: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 }
 
 .chat-area .modal-dialog-scrollable {
     height: 100% !important;
+    display: flex;
+    flex: 1;
 }
 
 .chatbox {
@@ -234,6 +251,14 @@ message-area
     overflow: hidden;
     height: 100%;
     border-left: 1px solid #ccc;
+    display: flex;
+    flex: 1;
+}
+
+.chat-area .modal-body{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 }
 
 .chatbox .modal-dialog,
@@ -248,6 +273,21 @@ message-area
     justify-content: space-between;
 }
 
+.custom-msg{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+}
+
+.custom-msg .each-msg{
+    margin-left: 10px;
+}
+
+
+#chat-input{
+    resize: none;
+}
 .chat-area .form-control {
     display: block;
     width: 80%;

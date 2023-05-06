@@ -110,6 +110,25 @@ def logout():
     session.clear()
     return redirect("/")
 
+@app.route("/dev_login", methods=['POST', 'GET'])
+def dev_login():
+    if config.Debug.DEBUG_MODE is False:
+        return 'error', 404
+    sub = "1"
+    name = "TmpUser"
+    picture = "/static/images/gpt.png"
+    
+    user = db_functions.get_uid_by_sub(sub)
+    if not user:
+        uId = db_functions.add_user(sub, name)
+    else:
+        uId = user[0][0]
+    session["uId"] = uId
+    session["name"] = name
+    session["picture"] = picture
+    
+    return redirect('/chat')
+
 
 @app.route("/chat", methods=['POST', 'GET'], endpoint='chat') #/chat/123 такого нет
 @login_is_required

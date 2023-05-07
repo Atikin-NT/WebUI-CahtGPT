@@ -156,9 +156,9 @@ main small {
   transition: color .1s;
 }
 
-#nav-content li a:hover {
+/* #nav-content li a:hover {
   color: #BF7497;
-}
+} */
 
 #nav-content li:not(.small) + .small {
   margin-top: auto;

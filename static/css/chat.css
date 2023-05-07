@@ -253,6 +253,7 @@ message-area
     border-left: 1px solid #ccc;
     display: flex;
     flex: 1;
+    padding-left: 10px;
 }
 
 .chat-area .modal-body{
@@ -265,6 +266,24 @@ message-area
 .history .modal-dialog {
     max-width: 100%;
     margin: 0;
+}
+
+.each-chat{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.each-chat p{
+    padding-left: 10px;
+}
+
+.each-chat:hover{
+    color: #3867d6;
+}
+
+.each-chat:hover p{
+    color: #3867d6;
 }
 
 .msg-search {

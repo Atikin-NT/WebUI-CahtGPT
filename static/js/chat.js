@@ -21,7 +21,9 @@ $("#gpt-button").click(function() {
     var question = $("#chat-input").val();
     $("#chat-input").val('');
 
-    let html_data = create_message(question, "static/images/favicon.png");
+    let userImg = $("#user-img").attr("src");
+
+    let html_data = create_message(question, userImg);
     $("#list-group").append(html_data);
 
     $.ajax({

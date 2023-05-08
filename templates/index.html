@@ -37,7 +37,23 @@
   <body>
 
     <div class="page">
-      <header tabindex="0">Chat-GPT</header>
+      <header>
+        <div class="header-left"></div>
+        <div class="header-center">
+          Chat-GPT
+        </div>
+        <div class="header-right">
+          <a class="menu-button">
+            <div class="flex-grow-1 ms-3" style="display: flex; align-items: center;">
+              <img id="user-img" user-img class="rounded img-fluid mx-auto d-block" height="40" width="40" src="{{ context.picture }}"/>
+              <p>{{ context.username }}</p>
+            </div>
+          </a>
+          <ul class="menu">
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+      </header>
       <div id="nav-container">
         <div class="bg"></div>
         <div class="button" tabindex="0">

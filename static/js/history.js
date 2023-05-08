@@ -7,12 +7,13 @@ const getpopup = (id, title) => {
         success: function (data) {
             const decodedTitle = decodeURIComponent(title);
             const messages = data.messages;
+            let userImg = $("#user-img").attr("src");
             $("#title").text(`${decodedTitle}`);
             $("#list-group").empty();
             for (let message of messages) {
                 role = message.role;
                 content = message.content;
-                if (role == 'user') img = "static/images/favicon.png"
+                if (role == 'user') img = userImg
                 else img = "static/images/gpt.png"
                 html_data = create_message(content, img);
                 $("#list-group").append(html_data);

@@ -72,6 +72,6 @@ class PostgresClient:
 db = PostgresClient(
     dbname='chat_db', 
     user="postgres", 
-    password="", 
+    password="password", 
     host='localhost', 
     port='5432')

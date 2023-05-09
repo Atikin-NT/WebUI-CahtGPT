@@ -1,5 +1,5 @@
 const getpopup = (id, title) => {
-    $(".toggle-history").click();
+    document.activeElement.blur();
     $.ajax({
         type: "GET",
         url: `/backend-api/conversation/${id}`,

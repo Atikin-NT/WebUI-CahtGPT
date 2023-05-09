@@ -36,8 +36,3 @@ $("#gpt-button").click(function() {
         }
     });
 });
-
-
-$(".toggle-history").click(function() {
-    document.querySelector('.history').classList.toggle('show-history');
-});

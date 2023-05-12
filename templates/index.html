@@ -44,7 +44,7 @@
         </div>
         <div class="header-right">
           <a class="menu-button">
-            <div class="flex-grow-1 ms-3" style="display: flex; align-items: center;">
+            <div class="user-menu flex-grow-1 ms-3">
               <img id="user-img" user-img class="rounded img-fluid mx-auto d-block" height="40" width="40" src="{{ context.picture }}"/>
               <p>{{ context.username }}</p>
             </div>
@@ -93,6 +93,15 @@
                       {% block content %}{% endblock %}
                     </div>
                   </div>
+                  <div class="send-box">
+                    <form action="">
+                        <textarea rows="1" class="form-control"  id="chat-input" aria-label="message…" placeholder="Write message…"></textarea>
+                        <!-- <input type="text" class="form-control"  id="chat-input" aria-label="message…" placeholder="Write message…"> -->
+            
+                        <button type="button" id="gpt-button"><i class="fa fa-paper-plane" aria-hidden="true"></i> Send</button>
+                    </form>
+                  </div>
+                  <script language="JavaScript" type="text/javascript" src="{{ url_for('static', filename='js/chat.js') }}"></script>
                 </div>
               </div>
             </div>

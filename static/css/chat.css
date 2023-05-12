@@ -244,6 +244,16 @@ message-area
     height: 100% !important;
     display: flex;
     flex: 1;
+    margin-bottom: 70px;
+}
+
+.user-menu{
+    display: flex;
+    align-items: center;
+}
+
+.user-menu p{
+    margin-left: 10px;
 }
 
 .chatbox {
@@ -610,8 +620,12 @@ li.repaly .time {
 
 /* send box ------------------------------------ */
 .send-box {
-    padding: 15px;
-    border-top: 1px solid #ccc;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+    background: white;
 }
 
 .send-box form {

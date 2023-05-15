@@ -1,7 +1,7 @@
 {
-    "name": "Chat App",
-    "short_name": "Chat",
-    "description": "A simple chat application",
+    "name": "Chat with AI",
+    "short_name": "ChatAI",
+    "description": "GPT Powered Chatbot & Writer",
     "start_url": "/chat",
     "display": "standalone",
     "background_color": "#ffffff",

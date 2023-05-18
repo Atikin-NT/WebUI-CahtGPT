@@ -21,7 +21,7 @@ db.execute_query('DROP TABLE IF EXISTS CONVERSATION CASCADE;')
 db.execute_query('''CREATE TABLE CONVERSATION (
                                     cId SERIAL PRIMARY KEY,
                                     author INTEGER NOT NULL,
-                                    title text DEFAULT '',
+                                    title text DEFAULT 'New chat',
                                     FOREIGN KEY (author) REFERENCES USERS(uId) on delete cascade);'''
                                     )
 

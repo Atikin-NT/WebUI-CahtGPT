@@ -260,7 +260,6 @@ message-area
     width: auto;
     overflow: hidden;
     height: 100%;
-    border-left: 1px solid #ccc;
     display: flex;
     flex: 1;
     padding-left: 10px;
@@ -316,6 +315,9 @@ message-area
 
 #chat-input{
     resize: none;
+    border: 0;
+    border-bottom: 1px solid;
+    border-radius: 0;
 }
 .chat-area .form-control {
     display: block;
@@ -440,7 +442,6 @@ a.add img {
 
 .msg-head {
     padding: 15px;
-    border-bottom: 1px solid #ccc;
 }
 
 .moreoption {
@@ -655,9 +656,9 @@ li.repaly .time {
 
 .send-box button {
     border: none;
-    background: #3867d6;
+    background: ##fffff;
     padding: 0.375rem 5px;
-    color: #fff;
+    color: #000;
     border-radius: 0.25rem;
     font-size: 14px;
     font-weight: 400;

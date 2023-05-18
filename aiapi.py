@@ -52,31 +52,11 @@ def generateChatResponse(prompt, ctx_messages, tokens_left):
     if msg_len > MAX_TOKENS_REQ or msg_len > tokens_left:
         return (question, "", 0, "Promt too long")
 
-    # response = openai.ChatCompletion.create(
-    #     model=model,
-    #     messages=msgs,
-    #     max_tokens=MAX_TOKENS_RESP
-    # )
-
-    response = {
-        "id": "chatcmpl-123",
-        "object": "chat.completion",
-        "created": 1677652288,
-        "choices": [
-        {
-            "index": 0,
-            "message": {
-            "role": "assistant",
-            "content": "\n\nHello there, how may I assist you today?",
-            },
-            "finish_reason": "stop"
-        }],
-        "usage": {
-            "prompt_tokens": 9,
-            "completion_tokens": 12,
-            "total_tokens": 21
-        }
-    }
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        max_tokens=MAX_TOKENS_RESP
+    )
 
     usage = response['usage']
     total_tokens_usage = usage['total_tokens']

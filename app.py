@@ -166,7 +166,7 @@ def chat():
         db_functions.add_message(answer['role'], answer['content'].strip(), conv_id)
 
 
-        return jsonify({'answer': answer['content'].strip()}), 200
+        return jsonify({'answer': answer['content'].strip(), 'conv_id': conv_id}), 200
     
     context = {}
     context['username'] = session["name"]

@@ -62,6 +62,11 @@ $("#gpt-button").click(function() {
         success: function (data) {
             let gpt_data = create_message(data.answer, "static/images/gpt.png");
             $("#list-group").append(gpt_data);
+            $.ajaxSetup({
+                data: {
+                    conv_id: data.conv_id
+                }
+            });
             updateHistory();
         }
     });

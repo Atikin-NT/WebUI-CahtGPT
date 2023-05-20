@@ -47,7 +47,9 @@ $.ajaxSetup({
 
 $("#gpt-button").click(function() {
     console.log("send mess");
+    $(this).attr("disabled", true);
     var question = $("#chat-input").val();
+    if (question.trim() === "") return;
     $("#chat-input").val('');
 
     let userImg = $("#user-img").attr("src");
@@ -68,6 +70,15 @@ $("#gpt-button").click(function() {
                 }
             });
             updateHistory();
+        },
+        error: function (data) {
+            let gpt_data = create_message(data.responseJSON.answer, "static/images/gpt.png");
+            $("#list-group").append(gpt_data);
         }
     });
 });
+
+$("#chat-input").keyup(function() {
+    var textareaVal = $(this).val();
+    $("#gpt-button").attr("disabled", textareaVal.trim() === "");
+})

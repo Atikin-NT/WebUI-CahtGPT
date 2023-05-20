@@ -134,9 +134,11 @@ def dev_login():
 @login_is_required
 def chat():
     uId = session['uId']
+    prompt = request.form.get('prompt', '')
     if request.method == 'POST':
-        prompt = request.form['prompt']
-        if request.form['conv_id']:
+        if (len(prompt.strip()) == 0):
+            return jsonify({'answer': 'empty prompt'}), 400
+        if request.form.get('conv_id', ''):
             conv_id = int(request.form['conv_id'])
             author = db_functions.get_author(conv_id)
             if author != uId:

@@ -1,11 +1,6 @@
 .markdownx {
     display: inline-block
   }
-  .markdownx .markdownx-editor,
-  .markdownx .markdownx-preview {
-    margin-left: 0;
-    width: 610px
-  }
   .markdownx .markdownx-preview {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;

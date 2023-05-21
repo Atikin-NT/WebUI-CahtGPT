@@ -318,6 +318,7 @@ message-area
     border: 0;
     border-bottom: 1px solid;
     border-radius: 0;
+    height: 60px;
 }
 .chat-area .form-control {
     display: block;
@@ -656,7 +657,7 @@ li.repaly .time {
 
 .send-box button {
     border: none;
-    background: ##fffff;
+    background: #fff;
     padding: 0.375rem 5px;
     color: #000;
     border-radius: 0.25rem;

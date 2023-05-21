@@ -2,6 +2,7 @@ import openai
 import tiktoken
 import config
 import db_functions
+import markdown as md
 
 openai.api_key = config.DevelopmentConfig.OPENAI_KEY
 MAX_TOKENS_RESP = 150
@@ -29,6 +30,50 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
       raise NotImplementedError(f"""num_tokens_from_messages() is not presently implemented for model {model}.
   See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.""")
 
+
+def markdown(value):
+    return md.markdown(value, extensions=[
+        'markdown.extensions.footnotes',
+        'markdown.extensions.footnotes',
+        'markdown.extensions.attr_list',
+        'markdown.extensions.def_list',
+        'markdown.extensions.tables',
+        'markdown.extensions.abbr',
+        'markdown.extensions.md_in_html',
+        'pymdownx.highlight',
+        'pymdownx.superfences',
+        'pymdownx.mark',
+        'pymdownx.arithmatex',
+    ],
+                       extension_configs={
+        "pymdownx.arithmatex": {
+            'generic': True,
+        },
+       "pymdownx.tasklist": {
+           "custom_checkbox": True,
+       },
+       "pymdownx.highlight": {
+           'use_pygments': True,
+           'guess_lang': True,
+           'noclasses': False,
+           'pygments_style': 'friendly',
+       },
+    })
+
+
+def close_blocks_check(msg: str) -> str:
+    """
+    Функция, которая проверяет на закрытие блоков в html. Например, бот мог отослать сообщение,
+    но он его обрезал по середине блока кода. В этом случае плывет вся разметка
+
+    msg: - сообщение
+    return: -отформатированное сообщение
+    """
+    msg = msg.replace("\\n", "\n").replace('\\"', '\"')
+    if msg.count("```") % 2 != 0:
+        msg += "\n...\n```"
+
+    return msg
 
 def generateChatResponse(prompt, ctx_messages, tokens_left):
     model = "gpt-3.5-turbo"
@@ -70,6 +115,8 @@ def generateChatResponse(prompt, ctx_messages, tokens_left):
     print('actual question_len', usage['prompt_tokens'])
     print('usage', total_tokens_usage)
 
+    answer_msg["content"] = close_blocks_check(answer_msg["content"])
+    answer_msg["content"] = markdown(answer_msg["content"])
     print(question)
     print(answer_msg)
 

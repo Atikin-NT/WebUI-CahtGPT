@@ -1,0 +1,72 @@
+.highlight{
+    background: #f0f0f0;
+    border-radius: 5px;
+    padding: 5px; 
+    overflow-x: auto;
+}
+.highlight pre{
+    line-height: 125%;
+}
+.highlight pre code{
+    color: #2f3337;
+}
+.highlight pre code .k{
+    color: #015692;
+}
+.highlight pre code .p{
+    color: #2f3337;
+}
+.highlight pre code .n{
+    color: #2f3337;
+}
+.highlight pre code .o{
+    color: #666666;
+}
+.highlight pre code .nt{
+    color:#b75501;
+}
+.highlight pre code .s{
+    color: #54790d;
+}
+.highlight pre code .err{
+    color: #015692;
+}
+.highlight pre code .na{
+    color: #015692;
+}
+.highlight pre code .cm{
+    color: #656e77;
+}
+.highlight pre code .cp, .gu{
+    color: #015692;
+}
+.highlight pre code .mi{
+    color: #b75501;
+}
+.highlight pre code .kd, .gh, .w, .kn{
+    color: #015692;
+}
+.highlight pre code .nx{
+    color: #b75501;
+}
+.highlight pre code .ch{
+    color: #1f7199;
+}
+.highlight pre code .c1{
+    color: #656e77;
+}
+.highlight pre code .s2, .si, .s1, .cpf, .sc, .gi, .vi{
+    color: #54790d;
+}
+.highlight pre code .nb, .kr, .nf, .mh, .mf, .nc, .nn, .kt, .m, .gd{
+    color: #b75501;
+}
+.highlight pre code .nv{
+    color: #54790d;
+}
+.highlight pre code .ge{
+    font-style: italic;
+}
+.highlight pre code .gs{
+    font-weight: 700;
+}

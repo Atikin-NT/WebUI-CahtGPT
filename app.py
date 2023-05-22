@@ -56,8 +56,8 @@ def login():
 @app.route("/callback_tg")
 def callback_tg():
     sub = request.args.get("id")
-    name = request.args.get("username")
-    picture = request.args.get("photo_url")
+    name = request.args.get("username", "u"+str(sub))
+    picture = request.args.get("photo_url", "static/images/gpt.png")
     
     user = db_functions.get_uid_by_sub(sub)
     if not user:

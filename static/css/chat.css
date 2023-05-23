@@ -244,7 +244,7 @@ message-area
     height: 100% !important;
     display: flex;
     flex: 1;
-    margin-bottom: 70px;
+    margin-bottom: 100px;
 }
 
 .user-menu{
@@ -253,6 +253,7 @@ message-area
 }
 
 .user-menu p{
+    display: block;
     margin-left: 10px;
 }
 
@@ -304,8 +305,11 @@ message-area
 .custom-msg{
     display: flex;
     flex-direction: row;
-    align-items: center;
     overflow: hidden;
+}
+
+.custom-msg img{
+    margin-top: 14px;
 }
 
 .custom-msg .each-msg{
@@ -849,6 +853,11 @@ button:focus {
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
         border-bottom-left-radius: 6px;
+    }
+
+    .user-menu p{
+        margin-left: 0;
+        display: none;
     }
 }
 

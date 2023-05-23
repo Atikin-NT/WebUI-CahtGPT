@@ -57,7 +57,7 @@ def login():
 def callback_tg():
     sub = request.args.get("id")
     name = request.args.get("username", "u"+str(sub))
-    picture = request.args.get("photo_url", "static/images/gpt.png")
+    picture = request.args.get("photo_url", "static/images/user.png")
     
     user = db_functions.get_uid_by_sub(sub)
     if not user:
@@ -116,7 +116,7 @@ def dev_login():
         return 'error', 404
     sub = "1"
     name = "TmpUser"
-    picture = "/static/images/gpt.png"
+    picture = "/static/images/user.png"
     
     user = db_functions.get_uid_by_sub(sub)
     if not user:

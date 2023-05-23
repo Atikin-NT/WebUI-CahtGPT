@@ -56,6 +56,10 @@ main small {
   color: #888;
 }
 
+.header-left {
+  width: 55px;
+}
+
 
 .header-center {
   margin: 0;
@@ -79,7 +83,7 @@ main small {
   margin: 0;
   padding: 0;
   position: absolute;
-  top: 50px;
+  top: 60px;
   right: 25px;
   border-radius: 10px;
   background-color: #f15959;

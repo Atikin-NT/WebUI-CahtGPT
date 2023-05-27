@@ -78,34 +78,20 @@
 
       <main>
         <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <div class="chat-area">
-                <div class="history">
-                  <div class="modal-dialog-scrollable">
-                    <div class="modal-content">
-                      
-                    </div>
-                  </div>
-                </div>
-    
-                <div class="chatbox">
-                  <div class="modal-dialog-scrollable">
-                    <div class="modal-content">
-                      {% block content %}{% endblock %}
-                    </div>
-                  </div>
-                  <div class="send-box">
-                    <form action="">
-                        <textarea rows="1" class="form-control"  id="chat-input" aria-label="message…" placeholder="Write message…" oninput="auto_grow(this)"></textarea>
-                        <!-- <input type="text" class="form-control"  id="chat-input" aria-label="message…" placeholder="Write message…"> -->
-            
-                        <button type="button" id="gpt-button" disabled><i class="fa fa-paper-plane" aria-hidden="true"></i> Send</button>
-                    </form>
-                  </div>
-                  <script language="JavaScript" type="text/javascript" src="{{ url_for('static', filename='js/chat.js') }}"></script>
+          <div class="chat-area"> 
+            <div class="chatbox">
+              <div class="modal-dialog-scrollable">
+                <div class="modal-content">
+                  {% block content %}{% endblock %}
                 </div>
               </div>
+              <div class="send-box">
+                <form action="">
+                    <textarea rows="1" class="form-control"  id="chat-input" aria-label="message…" placeholder="Write message…" oninput="auto_grow(this)"></textarea>
+                    <button type="button" id="gpt-button" disabled><i class="fa fa-paper-plane" aria-hidden="true"></i> Send</button>
+                </form>
+              </div>
+              <script language="JavaScript" type="text/javascript" src="{{ url_for('static', filename='js/src.js') }}"></script>
             </div>
           </div>
         </div>

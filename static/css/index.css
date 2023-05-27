@@ -190,6 +190,7 @@ main small {
   transition: transform .3s;
   will-change: transform;
   contain: paint;
+  overflow-y: scroll;
 }
 
 #nav-content ul {

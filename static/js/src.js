@@ -1,3 +1,25 @@
+const fillDialogues = () => {
+    $.ajax({
+        type: 'GET',
+        url: '/backend-api/conversations?offset=0&limit=20',
+        data: null,
+        success: function (data) {
+            let html_data = '';
+            for (let i = 0; i < data.total; i++) {
+                title = data.items[i].title;
+                let sliced_title = title.slice(0,42);
+                if (sliced_title.length != title.length) sliced_title += "..";
+                html_data += `
+                <li><a href="#" onclick="getpopup(${data.items[i].id}, '${encodeURIComponent(title)}')" class="flex py-3 px-3 items-center gap-3 relative rounded-md cursor-pointer break-all pr-14 bg-gray-800 hover:bg-gray-800 group animate-flash">
+                <div class="each-chat flex-grow-1 ms-3"><i class="fa-solid fa-comment"></i><p>${sliced_title}</p></div>
+                </a></li>
+                `;
+            }
+            $("#history-list-group").append(html_data);
+        }
+     });
+}
+
 const updateHistory = () => {
     newchathtml = `
     <li><a href="/chat" class="flex py-3 px-3 items-center gap-3 relative rounded-md cursor-pointer break-all pr-14 bg-gray-800 hover:bg-gray-800 group animate-flash">
@@ -7,23 +29,7 @@ const updateHistory = () => {
     </div>
     </a></li>`
     $("#history-list-group").empty().append(newchathtml);
-    $.ajax({
-        type: 'GET',
-        url: '/backend-api/conversations?offset=0&limit=20',
-        data: null,
-        success: function (data) {
-            let html_data = '';
-            for (let i = 0; i < data.total; i++) {
-                title = data.items[i].title;
-                html_data += `
-                <li><a href="#" onclick="getpopup(${data.items[i].id}, '${encodeURIComponent(title)}')" class="flex py-3 px-3 items-center gap-3 relative rounded-md cursor-pointer break-all pr-14 bg-gray-800 hover:bg-gray-800 group animate-flash">
-                <div class="each-chat flex-grow-1 ms-3"><i class="fa-solid fa-comment"></i><p>${data.items[i].title}</p></div>
-                </a></li>
-                `;
-            }
-            $("#history-list-group").append(html_data);
-        }
-     });
+    fillDialogues();
 }
 
 const create_message = (message, imageSrc) => {
@@ -88,3 +94,38 @@ function auto_grow(element) {
     element.style.height = "5px";
     element.style.height = (element.scrollHeight)+"px";
 }
+
+// from history.js
+const getpopup = (id, title) => {
+    document.activeElement.blur();
+    $.ajax({
+        type: "GET",
+        url: `/backend-api/conversation/${id}`,
+        data: null,
+        success: function (data) {
+            const decodedTitle = decodeURIComponent(title);
+            let sliced_title = decodedTitle.slice(0, 60);
+            if (sliced_title.length != decodedTitle.length) sliced_title += "..";
+            const messages = data.messages;
+            let userImg = $("#user-img").attr("src");
+            $("#title").text(`${sliced_title}`);
+            $("#list-group").empty();
+            for (let message of messages) {
+                role = message.role;
+                content = message.content;
+                if (role == 'user') img = userImg
+                else img = "static/images/gpt.png"
+                html_data = create_message(content, img);
+                $("#list-group").append(html_data);
+            }
+        }
+    });
+    $.ajaxSetup({
+        data: {
+            conv_id: id
+        }
+    });
+}
+
+ $(document).ready(function(){ fillDialogues(); });
+

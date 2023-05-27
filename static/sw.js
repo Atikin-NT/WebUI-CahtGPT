@@ -4,8 +4,7 @@ const urlsToCache = [
   '/static/css/chat.css',
   '/static/images/favicon.png',
   '/static/images/gpt.png',
-  '/static/js/chat.js',
-  '/static/js/history.js',
+  '/static/js/src.js',
   '/static/manifest.json'
 ];
 

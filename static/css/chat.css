@@ -319,10 +319,11 @@ message-area
 
 #chat-input{
     resize: none;
-    border: 0;
-    border-bottom: 1px solid;
-    border-radius: 0;
-    height: 60px;
+    border: 1px solid black;
+    border-radius: 5px;
+    min-height: 21px;
+    max-height: 100px;
+    overflow: hidden;
 }
 .chat-area .form-control {
     display: block;

@@ -82,3 +82,9 @@ $("#chat-input").keyup(function() {
     var textareaVal = $(this).val();
     $("#gpt-button").attr("disabled", textareaVal.trim() === "");
 })
+
+
+function auto_grow(element) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight)+"px";
+}

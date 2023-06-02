@@ -259,7 +259,7 @@ message-area
 
 .chatbox {
     width: auto;
-    overflow: hidden;
+    overflow-y: hidden;
     height: 100%;
     display: flex;
     flex: 1;

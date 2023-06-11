@@ -147,6 +147,7 @@ def chat():
 
             tokens_left = db_functions.tokens_left(uId)
             question, answer, total_tokens_usage, err = aiapi.generateChatResponse(prompt, ctx_messages, tokens_left)
+            # question, answer, total_tokens_usage, err = aiapi.generateFakeChatResponse(prompt, ctx_messages, tokens_left)
             if total_tokens_usage == 0:
                 return jsonify({'answer': err}), 400
 
@@ -155,6 +156,7 @@ def chat():
             
             tokens_left = db_functions.tokens_left(uId)
             question, answer, total_tokens_usage, err = aiapi.generateChatResponse(prompt, ctx_messages, tokens_left)
+            # question, answer, total_tokens_usage, err = aiapi.generateFakeChatResponse(prompt, ctx_messages, tokens_left)
             if total_tokens_usage == 0:
                 return jsonify({'answer': err}), 400
             

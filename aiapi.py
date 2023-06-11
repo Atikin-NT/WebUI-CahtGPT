@@ -3,6 +3,7 @@ import tiktoken
 import config
 import db_functions
 import markdown as md
+import random
 
 openai.api_key = config.DevelopmentConfig.OPENAI_KEY
 MAX_TOKENS_RESP = 150
@@ -123,3 +124,33 @@ def generateChatResponse(prompt, ctx_messages, tokens_left):
     return (question, answer_msg, total_tokens_usage, "ok")
 
 
+def generateFakeChatResponse(prompt, ctx_messages, tokens_left):
+    model = "gpt-3.5-turbo"
+
+    messages = [{"role": "user", "content": "You are a helpful assistant."}]
+
+    ctx_messages = [{ 'role': msg[0], 'content': msg[1] } for msg in ctx_messages]
+    messages.extend(ctx_messages)
+
+    question = { 'role': 'user', 'content': prompt }
+    messages.append(question)
+
+    msg_len = num_tokens_from_messages(messages)
+
+    print(messages)
+    print('question_len', msg_len)
+    print('tokens_left', tokens_left)
+    
+
+
+    if msg_len > MAX_TOKENS_REQ or msg_len > tokens_left:
+        return (question, "", 0, "Promt too long")
+    answer_msg = {
+        "content": "<p>\u041a \u0441\u043e\u0436\u0430\u043b\u0435\u043d\u0438\u044e, \u044f \u043d\u0435 \u043c\u043e\u0433\u0443 \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u043f\u043e\u0433\u043e\u0434\u0443 \u0432 \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u043c \u0432\u0440\u0435\u043c\u0435\u043d\u0438, \u0442\u0430\u043a \u043a\u0430\u043a \u044f \u043d\u0435 \u0438\u043c\u0435\u044e \u0434\u043e\u0441\u0442\u0443\u043f\u0430 \u043a \u0442\u0435\u043a\u0443\u0449\u0435\u0439 \u0433\u0435\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u043e\u0439 \u043b\u043e\u043a\u0430\u0446\u0438\u0438. \u0412\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u0443\u0437\u043d\u0430\u0442\u044c \u0442\u0435\u043a\u0443\u0449\u0443\u044e \u043f\u043e\u0433\u043e\u0434\u0443 \u0432 \u0441\u0432\u043e\u0451\u043c \u0440\u0435\u0433\u0438\u043e\u043d\u0435, \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u043c\u0435\u0441\u0442\u043d\u044b\u0435 \u043d\u043e\u0432\u043e\u0441\u0442\u043d\u044b\u0435 \u0440\u0435\u0441\u0443\u0440\u0441\u044b, \u0441\u0430\u0439\u0442\u044b \u043f\u043e\u0433\u043e\u0434\u044b \u0438\u043b\u0438 \u043c\u043e\u0431\u0438\u043b\u044c\u043d\u044b\u0435 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f.</p>",
+        "role": "assistant"
+    }
+    if bool(random.getrandbits(1)):
+        answer_msg["content"] = "<p>Hello! Is there anything I can help you with?</p>"
+    total_tokens_usage = 10
+
+    return (question, answer_msg, total_tokens_usage, "ok")

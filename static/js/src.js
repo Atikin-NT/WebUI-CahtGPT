@@ -33,9 +33,10 @@ const updateHistory = () => {
 }
 
 const create_message = (message, imageSrc) => {
-    return `
+    let string = `
     <li class="custom-msg list-group-item list-group-item-action d-flex gap-3 py-3">
-        <img src=${imageSrc} alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0">
+        
+        <img src="${imageSrc}" alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0"/>
         <div class="each-msg d-flex gap-2 w-100 justify-content-between markdownx">
         <div class="markdownx-preview">
             <p class="mb-0 opacity-75">${message}</p>
@@ -43,6 +44,11 @@ const create_message = (message, imageSrc) => {
         </div>
     </li>
     `;
+    let new_el = new DOMParser().parseFromString(
+        string,
+        "text/xml"
+    );
+    return new_el;
 }
 
 $.ajaxSetup({
@@ -57,19 +63,23 @@ $("#gpt-button").click(function() {
     var question = $("#chat-input").val();
     if (question.trim() === "") return;
     $("#chat-input").val('');
+    $("#chat-input").height(21);  // возвращение высоты по умолчанию
 
     let userImg = $("#user-img").attr("src");
 
-    let html_data = create_message(question, userImg);
+    let html_data = create_message(question, userImg).documentElement.outerHTML;
     $("#list-group").append(html_data);
+
+    let gpt_data = create_message("typing...", "static/images/gpt.svg").documentElement.outerHTML;
+    $("#list-group").append(gpt_data);
 
     $.ajax({
         type: "POST",
         url: "/chat",
         data: {'prompt': question },
         success: function (data) {
-            let gpt_data = create_message(data.answer, "static/images/gpt.png");
-            $("#list-group").append(gpt_data);
+            let gpt_data = create_message(data.answer, "static/images/gpt.svg").documentElement.outerHTML;
+            document.getElementById("list-group").lastChild.outerHTML = gpt_data;
             $.ajaxSetup({
                 data: {
                     conv_id: data.conv_id
@@ -78,7 +88,7 @@ $("#gpt-button").click(function() {
             updateHistory();
         },
         error: function (data) {
-            let gpt_data = create_message(data.responseJSON.answer, "static/images/gpt.png");
+            let gpt_data = create_message(data.responseJSON.answer, "static/images/gpt.svg").documentElement.outerHTML;
             $("#list-group").append(gpt_data);
         }
     });
@@ -114,8 +124,8 @@ const getpopup = (id, title) => {
                 role = message.role;
                 content = message.content;
                 if (role == 'user') img = userImg
-                else img = "static/images/gpt.png"
-                html_data = create_message(content, img);
+                else img = "static/images/gpt.svg"
+                let html_data = create_message(content, img).documentElement.outerHTML;
                 $("#list-group").append(html_data);
             }
         }

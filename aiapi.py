@@ -100,8 +100,7 @@ def generateChatResponse(prompt, ctx_messages, tokens_left):
 
     response = openai.ChatCompletion.create(
         model=model,
-        messages=messages,
-        max_tokens=MAX_TOKENS_RESP
+        messages=messages
     )
 
     usage = response['usage']

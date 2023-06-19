@@ -95,13 +95,12 @@ def generateChatResponse(prompt, ctx_messages, tokens_left):
     
 
 
-    if msg_len > MAX_TOKENS_REQ or msg_len > tokens_left:
+    if msg_len > tokens_left:
         return (question, "", 0, "Promt too long")
 
     response = openai.ChatCompletion.create(
         model=model,
-        messages=messages,
-        max_tokens=MAX_TOKENS_RESP
+        messages=messages
     )
 
     usage = response['usage']
@@ -110,8 +109,6 @@ def generateChatResponse(prompt, ctx_messages, tokens_left):
         return (question, "", total_tokens_usage, "Oops you beat the AI, try different questions, if the problem persists, come back later.")
     
     answer_msg = response['choices'][0]['message']
-
-    total_tokens_usage = msg_len + usage["completion_tokens"]
 
     print('actual question_len', usage['prompt_tokens'])
     print('usage', total_tokens_usage)
